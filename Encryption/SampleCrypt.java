@@ -7,7 +7,8 @@ import javax.crypto.spec.IvParameterSpec;
 
 public class SampleCrypt {
     public static void main(String[] args) {
-        String str = "Hello world, my name is akichun!";
+        String str = null;
+        byte[] bstr = null;
         byte[] encrypted = null;// 暗号文字列（byte列）
         String authData = "smzl in kut";
         int key_bits = 256;
@@ -16,29 +17,39 @@ public class SampleCrypt {
         Key key2 = null;
         byte[] decrypted = null;
 
-        try {
-            PrintStr("<<<< Client side >>>>");
+        // キーボード入力
+        BufferedReader keyboard = new BufferedReader(new InputStreamReader(System.in));
 
+        try {
             // create secret key
             key = crypt.makeKey(key_bits, authData);
-            byte[] bstr = str.getBytes();
-            // encryption
-            encrypted = crypt.encode(bstr, key, authData);
-
-            // Output encrypted string
-            PrintStr("Encrypted str : ");
-            PrintBin(encrypted);
-
-
-            PrintStr("<<<< Server side >>>>");
             key2 = crypt.makeKey(key_bits, authData);
-            decrypted = crypt.decode(encrypted, key2, authData);
+            while (true) {
+                PrintStr("Input (end is \\q) > ");
+                str = keyboard.readLine();
+                if (str.equals("\\q")) { break; }
+                bstr = str.getBytes();
+                PrintStr("\n");
 
-            PrintStr("Decrypted str : ");
-            PrintStr(new String(decrypted));
+                // encryption
+                encrypted = crypt.encode(bstr, key, authData);
+
+                // Output encrypted string
+                PrintStr("Encrypted str : \n");
+                PrintBin(encrypted);
+                PrintStr("\n");
+
+                // Decode
+                decrypted = crypt.decode(encrypted, key2, authData);
+
+                PrintStr("Decrypted str : \n");
+                PrintStr(new String(decrypted));
+                PrintStr("\n");
+            }
 
         } catch (Exception e) { System.out.println(e); }
     }
+
 
     // 表示用メソッド
     public static void PrintBin(byte[] b){
@@ -55,7 +66,7 @@ public class SampleCrypt {
 
 
     public static void PrintStr(String str) {
-        System.out.println(str);
+        System.out.print(str);
     }
 
 }

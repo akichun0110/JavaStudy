@@ -14,6 +14,8 @@ public class crypt {
        /**
      * 秘密鍵をバイト列から生成する
      * @param key_bits 鍵の長さ（ビット単位）
+     * @param authData 種
+     * @retrun Key 
      */
     public static Key makeKey(int key_bits, String authData) {
 
@@ -24,14 +26,8 @@ public class crypt {
             md.update(authData.getBytes("UTF-8"));
             key = md.digest();
             //System.out.println("SHA256 is OK : "+ key.length*8);
-            System.out.println("Secret Key is : ");
-            PrintBin(key);
-            // バイト列の内容（秘密鍵の値）はプログラマーが決める
-            /*
-            for (int i = 0; i < key.length; i++) {
-                key[i] = (byte) (i + 1);
-            }
-            */
+            //System.out.println("Secret Key is : ");
+            //PrintBin(key);
         } catch (Exception e) { System.out.println("makeKey Err : "+e); }
         System.out.println("Make Key is OK\n");
         return new SecretKeySpec(key, "AES");
@@ -39,6 +35,9 @@ public class crypt {
 
     /**
      * 暗号化
+     * @param byte[] 暗号化する平文
+     * @param Key 秘密鍵
+     * @param String 未定
      */
     public static byte[] encode(byte[] src, Key skey, String authData) {
         try {
